@@ -1,0 +1,25 @@
+services:
+  api:
+    build: .
+    restart: unless-stopped
+    environment:
+      BUCKET_NAME: ${BUCKET_NAME}
+      UPLOAD_TOKEN: ${UPLOAD_TOKEN}
+      AWS_DEFAULT_REGION: ${AWS_DEFAULT_REGION}
+
+  caddy:
+    image: caddy:2
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - api
+
+volumes:
+  caddy_data:
+  caddy_config:

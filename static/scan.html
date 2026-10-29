@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Pothole Scanner</title>
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%;background:#000;color:#fff;
+    font-family:system-ui,-apple-system,sans-serif;overflow:hidden;
+    -webkit-user-select:none;user-select:none}
+  #preview{width:100vw;height:100vh;object-fit:cover;background:#000}
+  #hud{position:fixed;top:env(safe-area-inset-top,12px);left:12px;
+    padding:10px 14px;background:rgba(0,0,0,.78);border-radius:10px;
+    font-size:13px;line-height:1.7;font-variant-numeric:tabular-nums}
+  .ok{color:#4caf50}.warn{color:#ff9800}.bad{color:#f44336}
+  #controls{position:fixed;bottom:calc(24px + env(safe-area-inset-bottom,0));
+    left:0;right:0;display:flex;justify-content:center}
+  button{padding:16px 44px;font-size:17px;font-weight:600;border:none;
+    border-radius:40px;color:#fff;background:#e53935;cursor:pointer;
+    touch-action:manipulation}
+  button:disabled{opacity:.5}
+  button.running{background:#43a047}
+  #overlay{position:fixed;inset:0;display:flex;flex-direction:column;
+    justify-content:center;align-items:center;padding:24px;gap:16px;
+    background:rgba(0,0,0,.94);text-align:center;z-index:10;
+    overflow-y:auto}
+  #overlay.hidden{display:none}
+  #overlay h2{margin:0;font-size:22px}
+  #overlay p{margin:0;font-size:14px;line-height:1.6;max-width:340px;color:#bbb}
+  .setting{display:flex;flex-direction:column;align-items:center;gap:8px;
+    margin-top:6px}
+  .setting label{font-size:12px;color:#888;text-transform:uppercase;
+    letter-spacing:.5px}
+  .opts{display:flex;gap:8px}
+  .opts button{padding:10px 16px;font-size:14px;background:#333;
+    border-radius:20px;font-weight:500}
+  .opts button.active{background:#1976d2}
+  #overlay>button{padding:16px 44px;font-size:17px;background:#1976d2;
+    margin-top:12px}
+  #err{position:fixed;top:50%;left:12px;right:12px;transform:translateY(-50%);
+    padding:16px;background:#b71c1c;border-radius:10px;font-size:14px;
+    text-align:center;display:none;z-index:20}
+</style>
+</head>
+<body>
+<video id="preview" autoplay playsinline muted></video>
+
+<div id="hud">
+  <div>Frames&nbsp;<b id="frames">0</b></div>
+  <div>GPS&nbsp;&nbsp;&nbsp;&nbsp;<b id="gps" class="bad">&mdash;</b></div>
+  <div>Speed&nbsp;&nbsp;<b id="speed">0</b> km/h</div>
+  <div>Queue&nbsp;&nbsp;<b id="queue">0</b></div>
+</div>
+
+<div id="controls"><button id="toggle">Start Scan</button></div>
+
+<div id="overlay">
+  <h2>Pothole Scanner</h2>
+  <p>Keep this tab open, screen on, phone on charger.<br>
+     Switching apps or locking the screen stops the scan.</p>
+
+  <div class="setting">
+    <label>Advance distance (m)</label>
+    <div class="opts" data-key="advance_m">
+      <button data-val="1.0">1.0</button>
+      <button data-val="1.2">1.2</button>
+      <button data-val="1.5" class="active">1.5</button>
+      <button data-val="2.0">2.0</button>
+    </div>
+  </div>
+
+  <div class="setting">
+    <label>Max frame rate</label>
+    <div class="opts" data-key="max_fps">
+      <button data-val="4">4</button>
+      <button data-val="6" class="active">6</button>
+      <button data-val="8">8</button>
+    </div>
+  </div>
+
+  <div class="setting">
+    <label>Speed warning (km/h)</label>
+    <div class="opts" data-key="speed_warn_kmh">
+      <button data-val="20">20</button>
+      <button data-val="25" class="active">25</button>
+      <button data-val="30">30</button>
+    </div>
+  </div>
+
+  <button id="ack">Start</button>
+</div>
+
+<div id="err"></div>
+<script src="/static/scan.js"></script>
+</body>
+</html>
